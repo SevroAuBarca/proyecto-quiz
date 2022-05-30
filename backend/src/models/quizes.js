@@ -4,9 +4,12 @@ var uniqueValidator = require("mongoose-unique-validator");
 const { Schema } = mongoose;
 
 const QuizSchema = new Schema({
-  firstAttempDate: { type: Date },
-  quizData: { type: Object },
+  categoryQuiz: { type: String, required: true },
+  dificult: { type: String, required: true },
+  firstAttempDate: { type: String, unique: false },
+  quizData: [{ type: Array }],
   firstAttempScore: { type: Number },
+  othersAttempsScore: [{ type: Object, required: false }],
   users: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -15,14 +18,12 @@ const QuizSchema = new Schema({
   ],
 });
 
-blogSchema.set("toJSON", {
+QuizSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
   },
 });
-
-blogSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model("Quiz", QuizSchema);

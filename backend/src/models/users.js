@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
 const userSchema = new mongoose.Schema({
-  email: { type: String, unique: true, maxlength: 25, required: true },
+  email: { type: String, unique: true, required: true },
   username: {
     type: String,
     unique: true,
@@ -28,7 +28,5 @@ userSchema.set("toJSON", {
     delete returnedObject.passwordHash;
   },
 });
-
-userSchema.plugin(uniqueValidator, { message: "{VALUE} to be unique" });
 
 module.exports = mongoose.model("User", userSchema);

@@ -3,7 +3,7 @@ const process = require("process");
 
 const Config = {
   port: process.env.PORT,
-  mongoURI: process.env.MONGO_URI,
+  mongoURL: process.env.MONGO_URL,
   mongoDbName: process.env.MONGO_DBNAME,
   secret: process.env.SECRET,
 };

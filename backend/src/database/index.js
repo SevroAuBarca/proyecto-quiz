@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
-const { MONGO_URL } = require("../utils/index.js");
+const { Config } = require("../utils/index.js");
 
 module.exports.mongoConnect = () =>
   mongoose
-    .connect(MONGO_URL)
+    .connect(Config.mongoURL)
     .then(() => {
       console.log("connected to MongoDB");
     })
