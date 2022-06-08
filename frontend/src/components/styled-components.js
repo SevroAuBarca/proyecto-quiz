@@ -97,6 +97,7 @@ const DivQuiz = styled.div`
   margin-top: 50px;
   width: 80%;
 `;
+
 export {
   GblgalStyle,
   Icon,

@@ -27,6 +27,7 @@ module.exports.LoginController = {
 
     res.status(200).send({
       token,
+      id: user._id,
       username: user.username,
       email: user.email,
       name: user.name,

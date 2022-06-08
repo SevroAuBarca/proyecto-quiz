@@ -19,6 +19,7 @@ module.exports.QuizController = {
   getQuiz: async (req, res) => {},
   postQuizes: async (req, res) => {
     const data = req.body;
+    console.log(data);
     const token = getTokenFrom(req);
     const decodedToken = jwt.verify(token, process.env.SECRET);
 

@@ -1,67 +1,51 @@
-import { useState } from "react";
-import { FormSelection } from "./components/Principal/FormSelection";
+import { useEffect, useState } from "react";
 import { Menu } from "./components/Principal/Menu";
 import { MenuPage } from "./components/Principal/MenuPage";
-import { MenuSelection } from "./components/Principal/MenuSelection";
-import { MenuTltle } from "./components/Principal/MenuTitle";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { SignUpPage } from "./components/LoginPage/SignUpPage";
 import { QuizPage } from "./components/QuizPage/QuizPage";
-import { GblgalStyle, H2, Input, Button } from "./components/styled-components";
+import { GblgalStyle } from "./components/styled-components";
 import { UserPage } from "./components/UserPsge/UserPage";
 import { ResultPage } from "./components/Principal/ResultPage";
+import { useNavigateData } from "./hooks/useNavigateData";
+import { useUser } from "./hooks/useUser";
+import { useLogin } from "./hooks/useLogin";
+import { LoginPage } from "./components/LoginPage/LoginPage";
+import { setToken } from "./services/quizService";
+import { StatsQuizes } from "./components/UserPsge/StatsQuizes";
 
 function App() {
-  const navigate = useNavigate();
+  const [
+    { selectCategorie, setSelectCategorie },
+    { selectDificulty, setSelectDificulty },
+    { getQuery },
+    { handleInit, handleSignUp, handleNext },
+  ] = useNavigateData();
   const location = useLocation();
-  const [selectCategorie, setSelectCategorie] = useState("");
-  const [selectDificulty, setSelectDificulty] = useState("second");
-  const [getQuery, setGetQuery] = useState("");
+  const { actualUser, setActualUser } = useUser();
+  const { handleLogin, handleLogout, userData, setUserData, user, setUser } =
+    useLogin(setActualUser);
   const [count, setCount] = useState(0);
   const [checkAnswer, setcheckAnswer] = useState({
     correct: 0,
     incorrect: 0,
   });
+  const [data, setData] = useState([]);
 
-  const handleInit = (event) => {
-    event.preventDefault();
-    switch (selectDificulty) {
-      case "easy":
-        getQuestions("10", selectCategorie, selectDificulty);
-        break;
-      case "medium":
-        getQuestions("15", selectCategorie, selectDificulty);
-        break;
-      case "hard":
-        getQuestions("20", selectCategorie, selectDificulty);
-        break;
-      default:
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
+    if (loggedUserJSON) {
+      const userStorage = JSON.parse(loggedUserJSON);
+      setUser(userStorage.username);
+      setActualUser(userStorage);
+      setToken(userStorage.token);
     }
-    console.log("entro");
-    navigate("/quiz");
-  };
+  }, []);
 
-  const getQuestions = (amount, category, difficult) => {
-    setGetQuery(
-      `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficult}&type=multiple`
-    );
-  };
-
-  const handleSignUp = (event) => {
-    event.preventDefault();
-    navigate("/");
-  };
-
-  const handleNext = (event) => {
-    event.preventDefault();
-    navigate("/quiz");
-  };
-
-  console.log(location);
   return (
     <div>
       <GblgalStyle />
-      <Menu location={location} />
+      <Menu location={location} user={user} handleLogout={handleLogout} />
 
       <Routes>
         <Route
@@ -78,22 +62,15 @@ function App() {
         />
         <Route
           path="/signup"
+          element={<SignUpPage handleSignUp={handleSignUp} />}
+        />
+        <Route
+          path="/login"
           element={
-            <SignUpPage>
-              <MenuTltle>
-                <H2>Cuenta Nueva</H2>
-              </MenuTltle>
-              <MenuSelection>
-                <FormSelection hg={50} submit={handleSignUp}>
-                  <Input type="text" placeholder="Usuario" />
-                  <Input type="text" placeholder="Correo" />
-                  <Input type="password" placeholder="Contraseña" />
-                  <Button>Crear</Button>
-                </FormSelection>
-              </MenuSelection>
-            </SignUpPage>
+            <LoginPage setUserData={setUserData} handleLogin={handleLogin} />
           }
         />
+        <Route path="/user" element={<UserPage />} />
         <Route
           path="/quiz"
           element={
@@ -104,6 +81,8 @@ function App() {
               setCount={setCount}
               checkAnswer={checkAnswer}
               setcheckAnswer={setcheckAnswer}
+              data={data}
+              setData={setData}
             />
           }
         />
@@ -113,10 +92,14 @@ function App() {
             <ResultPage
               checkAnswer={checkAnswer}
               setCheckAnswer={setcheckAnswer}
+              data={data}
             />
           }
         />
-        <Route path="/user" element={<UserPage />} />
+        <Route
+          path="/leatherboards"
+          element={<StatsQuizes id={actualUser.id} />}
+        />
       </Routes>
     </div>
   );

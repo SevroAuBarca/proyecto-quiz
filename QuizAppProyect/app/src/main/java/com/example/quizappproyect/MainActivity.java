@@ -14,8 +14,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         WebView myWebView = (WebView) findViewById(R.id.webview);
-        myWebView.loadUrl("https://dancing-sfogliatella-f0cf71.netlify.app/");
+        myWebView.loadUrl("https://fierce-waters-74357.herokuapp.com/");
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setDatabaseEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+
     }
 }

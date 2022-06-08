@@ -6,7 +6,7 @@ module.exports = {
     return data;
   },
   getUser: async (id) => {
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate("quizes");
     return user;
   },
   postUser: async ({ username, email, name }, passwordHash) => {

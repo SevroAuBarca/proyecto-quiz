@@ -6,6 +6,7 @@ import imgDesc from "../../assets/imagenes/descarga.png";
 import img2 from "../../assets/imagenes/img_2.png";
 import img3 from "../../assets/imagenes/img_3.png";
 import "../../estilos.css";
+
 export const UserPage = () => {
   var imagenes = [img1, img2, img3];
   var imagenVisible = 0;
